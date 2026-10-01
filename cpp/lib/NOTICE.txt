@@ -1,0 +1,8 @@
+The mining_search binary is a protected implementation of the GHA/PMP initialization stage for the constructed example in Chapter 6. Its implementation source is not included.
+
+The bundled Dubins connection code is from Andrew Walker, Dubins-Curves:
+https://github.com/AndrewWalker/Dubins-Curves
+Its MIT license is reproduced in DUBINS-LICENSE.txt.
+
+Binaries: Windows x86-64 (tested); Linux x86-64 (cross-compiled).
+The main trajectory optimization code uses CasADi and IPOPT, which must be installed separately.
