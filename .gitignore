@@ -1,0 +1,19 @@
+# Local AMPL/IPOPT installations and licenses are not redistributed.
+*.exe
+*.dll
+*.lic
+*.netlic
+*.so
+*.dylib
+ampl
+ipopt
+# Keep the file-based communication directories, not generated run outputs.
+matlab/AmplInputs/*
+!matlab/AmplInputs/.gitkeep
+matlab/AmplResults/*
+!matlab/AmplResults/.gitkeep
+*.asv
+*.mexw64
+# Never publish the editable source of the protected search core.
+matlab/SearchGlobalHybridAStar.m
+private_sources/

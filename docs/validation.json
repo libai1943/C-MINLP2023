@@ -1,0 +1,66 @@
+{
+  "environment": {
+    "os": "Windows",
+    "MATLAB": "R2021b",
+    "IPOPT": "3.13.4",
+    "linear_solver": "MA27"
+  },
+  "intervals": 100,
+  "configurations": 101,
+  "case_id": 1,
+  "report": {
+    "max_equation_residual": 5.731238044148768e-07,
+    "max_endpoint_residual": 0,
+    "max_bound_violation": 0,
+    "minimum_disc_clearance": 0.3311988261252279,
+    "cost": {
+      "gear_shifts": 1,
+      "segment_lengths": [
+        54.46222123916449,
+        17.634231326908534
+      ],
+      "segment_gears": [
+        1,
+        -1
+      ],
+      "components": [
+        60.473921234893425,
+        2.9301066699262814,
+        1,
+        0
+      ],
+      "total": 80.54717390164157,
+      "target": 60.54717390164158
+    },
+    "reference_cost": {
+      "gear_shifts": 1,
+      "segment_lengths": [
+        56.509554554784735,
+        17.48819622858324
+      ],
+      "segment_gears": [
+        1,
+        -1
+      ],
+      "components": [
+        60.76306308300765,
+        6.3309484656097315,
+        1,
+        0
+      ],
+      "total": 80.92133679464789,
+      "target": 60.92133679464789
+    },
+    "minimum_segment_length": 17.634231326908534,
+    "gear_pattern_preserved": true,
+    "passed": true
+  },
+  "search": {
+    "expanded": 11420,
+    "candidate_count": 200,
+    "best_cost": 80.92133679464789,
+    "seconds": 33.4970378,
+    "heuristic": 0
+  },
+  "nlp_process_seconds": 4.7412555
+}
