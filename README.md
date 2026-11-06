@@ -1,4 +1,6 @@
-# C-MINLP2023 — 第六章配套 MATLAB 示例
+# 矿用货车精准停泊 · C-MINLP
+
+[下载 ZIP](https://github.com/libai1943/C-MINLP2023/archive/refs/heads/main.zip) · [从这里开始](#安装与一键运行) · [阅读指南](#主要文件与函数)
 
 本仓库配套**中文图书《非结构化场景自动驾驶轨迹规划技术》**第六章：**露天矿区装卸载场景中的矿用货车精准停泊轨迹规划方法**。
 
@@ -9,6 +11,8 @@
 > Bai Li, Yakun Ouyang, Xiaohui Li, Dongpu Cao, Tantan Zhang, and Yaonan Wang. **Mixed-Integer and Conditional Trajectory Planning for an Autonomous Mining Truck in Loading/Dumping Scenarios: A Global Optimization Approach.** *IEEE Transactions on Intelligent Vehicles*, 8(2):1512–1522, 2023. [DOI: 10.1109/TIV.2022.3214777](https://doi.org/10.1109/TIV.2022.3214777).
 
 **使用本代码进行研究、实验或发表成果时，请引用该论文。** 论文于 2022 年在线发表，正式卷期为 2023 年。BibTeX 见 [CITATION.bib](CITATION.bib)。
+
+**配套图书**　李柏著，《非结构化场景自动驾驶轨迹规划技术》，机械工业出版社，2026 年 6 月，第六章。[作者著作目录](https://faculty.ecnu.edu.cn/_s15/lb2_26496/main.psp)
 
 ## 实际运行效果
 
@@ -64,6 +68,24 @@ run('matlab/RunMe.m');
 - `matlab/AmplInputs/` 保存本次参数、初值；`matlab/AmplResults/` 保存 TXT 结果、`solver.log`、`validation.json` 和 `demo_result.mat`。
 - 这两个通信目录以 `.gitkeep` 保留；运行数据不提交到 Git。
 
+### 使用 C++ 导出同一类规划数据
+
+除 MATLAB 教学流程外，[C++ 入口](cpp/src/main.cpp)把搜索初值、CasADi/IPOPT 求解与 CSV 导出放在一个命令行程序中。需要 C++17、CMake 3.16 或更高版本、含 IPOPT 插件的 CasADi C++ 开发包，并使用与仓库内 x86-64 搜索库匹配的工具链。Windows 导入库为 MinGW 格式。
+
+```bash
+cmake -S cpp -B build/mining -DCMAKE_BUILD_TYPE=Release -Dcasadi_DIR=/path/to/casadi/cmake
+cmake --build build/mining --config Release
+./build/mining/mining_demo --output results_cpp
+```
+
+以上运行路径适用于 Linux 单配置生成器。请将 CasADi 的动态库加入本机加载路径。C++ 入口默认使用 MUMPS；上文 MATLAB 验证记录使用 MA27。
+
+| 输出 | 怎样读 |
+| --- | --- |
+| `reference.csv` | 初始轨迹和搜索阶段确定的行驶方向，按 `t` 排列。 |
+| `trajectory.csv` | 优化后的 `t,x,y,theta,v,a,phi,omega`。在同一坐标轴叠加两份 CSV 的 `x,y`，可以看到精修前后轨迹的差异。 |
+| 终端摘要 | `Tf` 为行驶时间，`planning` 为计算耗时；`shifts` 统计实际换向，`clearance` 给出离散净空。 |
+
 ## 总体架构
 
 ```mermaid
@@ -110,7 +132,7 @@ flowchart TD
 - Algorithm 1 / IV-B：交换起终点、始终 `h = 0`、每 20 次扩展尝试两条不同转弯半径的 Dubins 连接，找到 200 条候选后择优。搜索时的行驶方向与实际执行方向相反，曲率界随之对调。PMP 给每个恒方向路径段分配静止到静止的加速—巡航—减速或加速—减速速度。
 - 式 (11)–(14)：从初始轨迹固定各点方向及对应转角界，施加位置邻域和安全走廊；求解一次硬约束 NLP，目标仅保留 `w1*J1 + w2*J2`。严格的倒车不等式在数值模型中用闭区间 `v <= 0` 表示。求解后独立检查方向模式与段长，不能仅凭求解器成功就宣称通过。
 
-本版按用户指定的论文作为技术细节依据：不混入书中其他扩展配置（非零初速、终端位姿区间、延迟启用启发函数、铲斗条件几何等）。场景选为**卸载泊位**，没有挖掘机铲斗，因此不另加装载铲斗避障条件。搜索罚项的具体数值与网格离散是独立实现的工程选择，不声称与未公开原代码相同。有限候选搜索和一次局部 NLP 的成功，不构成连续原问题全局最优性的数学证明。
+本例以所引论文为技术依据：不混入书中其他扩展配置（非零初速、终端位姿区间、延迟启用启发函数、铲斗条件几何等）。场景选为**卸载泊位**，没有挖掘机铲斗，因此不另加装载铲斗避障条件。搜索罚项的具体数值与网格离散是独立实现的工程选择，不声称与未公开原代码相同。有限候选搜索和一次局部 NLP 的成功，不构成连续原问题全局最优性的数学证明。
 
 ## 主要文件与函数
 
